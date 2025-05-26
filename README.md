@@ -21,3 +21,7 @@ Dowload zip file
   node server
 ```
 
+# 5. Run project with nodemon
+```sh
+  npm run start
+```

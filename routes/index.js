@@ -56,7 +56,11 @@ async function routes(fastify, options, next) {
   fastify.get('/users', usersController.getUsersList)
   fastify.get('/users/:id', usersController.getUsersById)
   fastify.post('/users', usersController.addUsers)
-  fastify.put('/users/:id', usersController.updateUsers)
+  fastify.put('/users/:id', {
+    onRequest: [fastify.authenticate]
+  }, (req,reply) => {
+    usersController.updateUsers(req,reply,fastify)
+  })
   fastify.delete('/users/:id', usersController.deleteUsers)
 
   // เกี่ยวกับ addresses

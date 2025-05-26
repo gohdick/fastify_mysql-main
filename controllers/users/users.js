@@ -75,7 +75,16 @@ const addUsers = async (req,reply) => {
     }
 }
 
-const updateUsers = async (req, reply) => {
+const updateUsers = async (req, reply,fastify) => {
+
+    const token = req.headers.authorization.split(' ')[1];
+    const decoded = fastify.jwt.decode(token)
+    console.log(decoded)
+    // ตรวจสอบว่า id ใน token ตรงกับ id ที่จะ update หรือไม่
+    if (parseInt(decoded.user_id) !== parseInt(req.params.id)) {
+        return reply.status(401).send({ message: 'Unauthorized' });
+    }
+
     // Partial update: all fields optional
     const userSchema = z.object({
         username: z.string().optional(),

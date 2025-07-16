@@ -4,6 +4,8 @@ const reportController = require('../controllers/report/orders')
 const loginController = require('../controllers/login/login')
 const usersController = require('../controllers/users/users')
 const addressesController = require('../controllers/users/addresses')
+const categoryController = require('../controllers/category')
+
 
 async function routes(fastify, options, next) {
   fastify.get('/', async (request, reply) => {
@@ -14,11 +16,8 @@ async function routes(fastify, options, next) {
   })
 
   // เกี่ยวกับ product
-  fastify.get('/product', {
-    onRequest: [fastify.authenticate]
-  }, (req,reply) => {
-    productController.getProductList(req,reply,fastify)
-  })
+  fastify.get('/product', productController.getProductList)
+
   fastify.get('/product/:id', {
     onRequest: [fastify.authenticate]
   }, (req,reply) => {
@@ -39,7 +38,8 @@ async function routes(fastify, options, next) {
   }, (req,reply) => {
     productController.deleteProduct(req,reply,fastify)
   })
-
+  fastify.get('/product-category/:category_id', productController.getProductListByCategoryId)
+  
 
   // เกี่ยวกับ orders
   fastify.get('/orders', ordersController.getOrdersList)
@@ -72,6 +72,14 @@ async function routes(fastify, options, next) {
 
   // login
   fastify.post('/login', loginController.login)
+
+  // เกี่ยวกับ category  
+  fastify.get('/category', categoryController.getCategoryList)
+  fastify.get('/category/:id', categoryController.getCategoryById)
+  fastify.post('/category', categoryController.addCategory)
+  fastify.put('/category/:id', categoryController.updateCategory)
+  fastify.delete('/category/:id', categoryController.deleteCategory)
+
 
   next()
 }

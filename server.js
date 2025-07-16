@@ -1,6 +1,12 @@
 const fastify = require('fastify')({
     debug: false
 })
+const fastifyStatic = require('@fastify/static');
+const path = require('path');
+fastify.register(fastifyStatic, {
+  root: path.join(__dirname, 'public'),
+  prefix: '/public/',
+});
 
 fastify.register(require('fastify-jwt'), {
     secret: 'my-secret-key_123'
@@ -10,6 +16,7 @@ const routes = require('./routes')
 
 fastify.register(require('@fastify/formbody'))
 
+
 fastify.register(require('@fastify/cors'), { 
     
     origin: '*',
@@ -17,7 +24,7 @@ fastify.register(require('@fastify/cors'), {
     methods: ['GET', 'PUT', 'POST', 'DELETE'],
     credentials: true,
     maxAge: 86400,
-    preflightContinue: false
+    preflightContinue: false 
 
   })
   
@@ -32,7 +39,7 @@ fastify.register(require('@fastify/cors'), {
 fastify.register(routes)
 
 
-fastify.listen(3000, '0.0.0.0', err => {
+fastify.listen(3001, '0.0.0.0', err => {
   if (err) throw err
   console.log(`server listening on ${fastify.server.address().port}`)
 })
